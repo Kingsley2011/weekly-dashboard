@@ -1,24 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tailwind CSS Sandbox</title>
-  <!-- This script tag loads the Tailwind CSS engine on the fly -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portfolio | Premium Design</title>
+    <style>
+        /* ==========================================
+           1. 顶级设计系统变量
+           ========================================== */
+        :root {
+            --dark-bg: #0B1120;
+            --dark-surface: #1E293B;
+            --accent-start: #38BDF8;   
+            --accent-end: #818CF8;     
+            --bg-gray: #F8FAFC;        
+            --white: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            --transition-smooth: 0.5s cubic-bezier(0.22, 1, 0.36, 1); 
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-main);
+            background-color: var(--bg-gray);
+            line-height: 1.6;
+            letter-spacing: -0.015em;
+        }
+
+        /* ==========================================
+           2. 动态微光占位图 
+           ========================================== */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .img-placeholder {
+            background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 3s infinite linear;
+            display: flex; align-items: center; justify-content: center;
+            color: #94A3B8; font-size: 0.85rem; font-weight: 500;
+            border-radius: var(--radius-md); overflow: hidden; width: 100%;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .img-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ==========================================
+           3. 顶级毛玻璃导航栏
+           ========================================== */
+        nav {
+            position: fixed; top: 0; width: 100%;
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: saturate(180%) blur(24px);
+            -webkit-backdrop-filter: saturate(180%) blur(24px);
+            padding: 18px 6%; display: flex; justify-content: space-between;
+            align-items: center; z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4); 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .logo { font-weight: 700; font-size: 1.15rem; color: var(--text-main); text-decoration: none; letter-spacing: -0.03em; }
+        .nav-links { display: flex; gap: 36px; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; transition: color var(--transition-smooth); }
+        .nav-links a:hover { color: var(--text-main); }
+
+        /* ==========================================
+           4. 动画与英雄区 
+           ========================================== */
+        @keyframes fadeUpSmooth {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-up { opacity: 0; animation: fadeUpSmooth 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .delay-1 { animation-delay: 0.15s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.45s; }
+
+        .hero {
+            background: radial-gradient(circle at top right, var(--dark-surface), var(--dark-bg));
+            min-height: 70vh; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; padding: 140px 5% 80px 5%; text-align: center; position: relative; overflow: hidden;
+        }
+        .hero h1 { color: var(--white); font-size: 5rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.04em; margin-bottom: 24px; }
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero p { color: #94A3B8; font-size: 1.25rem; max-width: 600px; font-weight: 400; line-height: 1.6; }
+
+        /* ==========================================
+           5. 卡片系统 
+           ========================================== */
+        section { padding: 100px 6% 60px 6%; max-width: 1140px; margin: 0 auto; }
+        .section-title { font-size: 2.4rem; color: var(--text-main); margin-bottom: 40px; font-weight: 700; letter-spacing: -0.04em; text-align: center; }
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        
+        .premium-card {
+            background-color: var(--white); padding: 40px; border-radius: var(--radius-lg);
+            border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.06); 
+            transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+            display: flex; flex-direction: column;
+        }
+        .premium-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); }
+        .premium-card h3 { font-size: 1.5rem; font-weight: 700; margin: 24px 0 12px 0; letter-spacing: -0.03em; color: var(--text-main); }
+        .premium-card p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; }
+
+        .tags { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+        .tag {
+            background-color: var(--white); color: var(--text-main); padding: 10px 24px; border-radius: 40px; 
+            font-size: 0.9rem; font-weight: 600; border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02); transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .tag:hover { transform: translateY(-3px); border-color: var(--accent-start); }
+
+        .learn-more {
+            display: inline-flex; align-items: center; margin-top: auto; padding-top: 20px;
+            color: var(--accent-start); text-decoration: none; font-weight: 600; font-size: 1rem;
+            transition: opacity var(--transition-smooth); cursor: pointer; border: none; background: none;
+        }
+        .learn-more:hover { opacity: 0.7; }
+        .learn-more::after { content: '→'; margin-left: 6px; transition: transform 0.3s ease; }
+        .premium-card:hover .learn-more::after { transform: translateX(5px); }
+
+        footer { text-align: center; padding: 60px 20px; font-size: 0.9rem; color: #CBD5E1; background-color: var(--dark-bg); margin-top: 60px; }
+
+        /* ==========================================
+           6. 苹果级毛玻璃弹窗 (iOS Modal System) 
+           ========================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(11, 17, 32, 0.4); /* 深色半透明遮罩 */
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            z-index: 2000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; padding: 20px;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal-box {
+            background: var(--white); width: 100%; max-width: 680px;
+            border-radius: var(--radius-lg); padding: 48px; position: relative;
+            transform: scale(0.95) translateY(20px); opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .modal-overlay.active .modal-box { transform: scale(1) translateY(0); opacity: 1; }
+        
+        .close-btn {
+            position: absolute; top: 24px; right: 24px;
+            background: #F1F5F9; border: none; width: 36px; height: 36px;
+            border-radius: 50%; cursor: pointer; font-size: 18px; color: var(--text-muted);
+            display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s;
+        }
+        .close-btn:hover { background: #E2E8F0; color: var(--text-main); }
+        
+        .modal-box h2 { font-size: 2rem; color: var(--text-main); margin-bottom: 16px; letter-spacing: -0.03em; }
+        .modal-box p { color: var(--text-muted); margin-bottom: 20px; line-height: 1.7; font-size: 1.05rem; }
+        .modal-tag { display: inline-block; background: var(--bg-gray); padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; color: var(--accent-start); margin-right: 8px; margin-bottom: 24px;}
+
+        @media (max-width: 768px) {
+            .hero { min-height: 60vh; padding-top: 120px; }
+            .hero h1 { font-size: 3.5rem; }
+            .grid-layout { grid-template-columns: 1fr; gap: 24px; }
+            .premium-card { padding: 30px; }
+            .nav-links { display: none; }
+            section { padding: 60px 5%; }
+            .modal-box { padding: 32px 24px; }
+        }
+    </style>
 </head>
-<body class="bg-slate-950 min-h-screen flex items-center justify-center p-4">
-  <!-- Main Wrapper -->
-  <div id="card-wrapper" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-sm shadow-2xl">
-    <!-- Profile Image -->
-    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Profile" class="w-24 h-24 rounded-full mx-auto border-4 border-emerald-500 shadow-lg object-cover">
-    <!-- User Information -->
-    <h2 class="text-2xl font-bold text-white text-center mt-4">Alex Mercer</h2>
-    <p class="text-sm font-semibold text-emerald-400 text-center uppercase tracking-wider mb-4">Senior UI Designer</p>
-    <p class="text-slate-400 text-center text-sm leading-relaxed mb-6">
-    </p>
-    <!-- Action Target -->
-    <a href="#" class="block text-center bg-emerald-500 text-slate-950 font-bold py-3 px-6 rounded-2xl shadow-lg transition-all duration-300 ease-in-out hover:bg-emerald-400 hover:scale-[1.03] hover:shadow-emerald-500/20">View Portfolio</a>
-  </div>
+<body>
+
+    <nav>
+        <a href="#" class="logo">Portfolio.</a>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#work">Work</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1 class="animate-up">Calm.<br>Curious.<br><span class="gradient-text">Modern.</span></h1>
+        <p class="animate-up delay-1">A Grade 10 student newly arrived at St. George's from Beijing.<br>Building new connections through design and ideas.</p>
+    </header>
+
+    <section id="about">
+        <h2 class="section-title animate-up delay-2">My Story</h2>
+        <div class="grid-layout animate-up delay-3">
+            <div class="premium-card">
+                <div class="img-placeholder" style="min-height: 240px;">[ Photo: Beijing Roots ]</div>
+                <h3>Roots in Beijing</h3>
+                <p>Growing up in Beijing shaped my perspective and gave me a unique cultural background that I proudly carry with me as my foundation.</p>
+            </div>
+            <div class="premium-card">
+                <div class="img-placeholder" style="min-height: 240px; animation-delay: -1.5s;">[ Photo: St. George's ]</div>
+                <h3>New Chapter</h3>
+                <p>As a new student at St. George's, I built this space to let my teachers and peers see who I am beyond just academic results.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" style="background-color: var(--white); max-width: 100%; padding-bottom: 100px;">
+        <div style="max-width: 1140px; margin: 0 auto;">
+            <h2 class="section-title">Featured Work</h2>
+            <p style="text-align: center; color: var(--text-muted); margin: -20px auto 40px auto; font-size: 1.1rem; max-width: 500px;">
+                A curated selection of school projects I am genuinely proud of. Quality over clutter.
+            </p>
+            
+            <div class="grid-layout">
+                <!-- 项目1 卡片 -->
+                <div class="premium-card" style="background-color: var(--bg-gray);">
+                    <div class="img-placeholder" style="height: 280px;">[ Image: Robotics & Tech ]</div>
+                    <h3>Biomimetic Robotics</h3>
+                    <p>An ocean-cleaning robot project utilizing computer vision. Blending technology with environmental sustainability.</p>
+                    <!-- 点击触发弹窗 1 -->
+                    <button class="learn-more" onclick="openModal('modal-1')">View Details</button>
+                </div>
+                
+                <!-- 项目2 卡片 -->
+                <div class="premium-card" style="background-color: var(--bg-gray);">
+                    <div class="img-placeholder" style="height: 280px; animation-delay: -1.5s;">[ Image: Music Composition ]</div>
+                    <h3>Music Composition</h3>
+                    <p>Analyzing chord progressions and writing original lyrics across R&B and Jazz genres using modern production tools.</p>
+                    <!-- 点击触发弹窗 2 -->
+                    <button class="learn-more" onclick="openModal('modal-2')">View Details</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 弹窗结构 1 (隐藏状态) -->
+    <div class="modal-overlay" id="modal-1" onclick="closeModal(event, 'modal-1')">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal(event, 'modal-1')">×</button>
+            <span class="modal-tag">Python & OpenCV</span>
+            <h2>Biomimetic Ocean-Cleaning Robot</h2>
+            <div class="img-placeholder" style="height: 200px; margin-bottom: 24px; border-radius: 12px;">[ Detailed Robot Diagram/Code Snippet ]</div>
+            <p>For this project, I explored how technology can solve real-world environmental issues (SDG 14: Life Below Water). I designed a cardboard prototype inspired by the movement of manta rays.</p>
+            <p>Instead of just building the physical structure, I integrated computer vision using Python and YOLOv8 to allow the system to visually track objects. This project taught me how to bridge the gap between mechanical engineering and artificial intelligence.</p>
+        </div>
+    </div>
+
+    <!-- 弹窗结构 2 (隐藏状态) -->
+    <div class="modal-overlay" id="modal-2" onclick="closeModal(event, 'modal-2')">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal(event, 'modal-2')">×</button>
+            <span class="modal-tag">Logic Pro & Arrangement</span>
+            <h2>Music Theory & Composition</h2>
+            <div class="img-placeholder" style="height: 200px; margin-bottom: 24px; border-radius: 12px; animation-delay: -1s;">[ Screenshot of Logic Pro Timeline ]</div>
+            <p>Beyond STEM, music is my creative outlet. In this project, I focused on analyzing complex chord progressions (like 6-4-5-1 structures) and melody arrangements in R&B and Pop music.</p>
+            <p>Using Logic Pro and MIDI instruments, I experimented with producing my own tracks and writing original lyrics in both Chinese and English. It’s a process that balances technical precision with emotional storytelling.</p>
+        </div>
+    </div>
+
+    <section id="interests" style="text-align: center; padding-top: 80px;">
+        <h2 class="section-title" style="margin-bottom: 10px;">Beyond Academics</h2>
+        <p style="color: var(--text-muted); font-size: 1.15rem;">Driven by curiosity and a passion for creating.</p>
+        <div class="tags">
+            <span class="tag">Robotics</span>
+            <span class="tag">Music Production</span>
+            <span class="tag">Modern Design</span>
+            <span class="tag">Basketball</span>
+        </div>
+    </section>
+
+    <footer>
+        <p>Designed with a modern, calm, and uncluttered vision. © 2026</p>
+    </footer>
+
+    <!-- 控制弹窗的 JavaScript -->
+    <script>
+        // 打开弹窗：添加 active 类，并禁止底层页面滚动
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        // 关闭弹窗：移除 active 类，恢复底层滚动
+        function closeModal(event, modalId) {
+            // 防止点击弹窗内部时触发关闭（阻止事件冒泡）
+            if(event) { event.stopPropagation(); }
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
 </body>
 </html>
